@@ -40,8 +40,8 @@ TIMEZONE=America/Bogota
 
 
 ROOT_PASSWORD=root
-DEFAULT_USER=default
-DEFAULT_USER_PASSOWRD=default
+DEFAULT_USER=hospitec
+DEFAULT_USER_PASSOWRD=hospitec
 DEFAULT_USER_OPTIONS="-g user -G wheel"
 
 [ -e /sys/firmware/efi/efivars ]; UEFI_SYSTEM=$?
@@ -231,6 +231,10 @@ check_fail $?
 
 announce "Setting root password"
 echo "root:$ROOT_PASSWORD" | arch-chroot /mnt chpasswd
+check_fail $?
+
+announce "Configuring sudoers"
+echo -n "%wheel ALL=(ALL) ALL" > /mnt/etc/sudoers.d/wheel
 check_fail $?
 
 announce "Configuring skel folder"

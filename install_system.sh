@@ -41,7 +41,7 @@ TIMEZONE=America/Bogota
 
 ROOT_PASSWORD=root
 DEFAULT_USER=default
-DEFAULT_USER_PASSOWRD=default
+DEFAULT_USER_PASSWORD=default
 DEFAULT_USER_OPTIONS="-g user -G wheel"
 
 [ -e /sys/firmware/efi/efivars ]; UEFI_SYSTEM=$?

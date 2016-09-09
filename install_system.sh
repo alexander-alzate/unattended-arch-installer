@@ -28,10 +28,21 @@ CRYPT_TMP_NAME=crypt_tmp
 CRYPT_TMP=/dev/mapper/$CRYPT_TMP_NAME
 
 RAM_SIZE=`grep MemTotal /proc/meminfo | awk '{print $2}'`K
+
+DEFAULT_LOCALE=en_US
+DEFAULT_CHARSET=UTF8
+
 CONSOLE_KEYMAP="es"
+
 PACSTRAP="base base-devel grub openssh sudo vim"
 HOSTNAME=workstation
 TIMEZONE=America/Bogota
+
+
+ROOT_PASSWORD=root
+DEFAULT_USER=default
+DEFAULT_USER_PASSOWRD=default
+DEFAULT_USER_OPTIONS="-g user -G wheel"
 
 [ -e /sys/firmware/efi/efivars ]; UEFI_SYSTEM=$?
 
@@ -219,7 +230,7 @@ FSTAB
 check_fail $?
 
 announce "Setting root password"
-echo "root:root" | arch-chroot /mnt chpasswd
+echo "root:$ROOT_PASSWORD" | arch-chroot /mnt chpasswd
 check_fail $?
 
 announce "Configuring skel folder"
@@ -237,7 +248,7 @@ echo "$HOSTNAME" > /mnt/etc/hostname
 check_fail $?
 
 announce "Setting Timezone"
-ln -sf "/usr/share/zineinfo/$TIMEZONE" /mnt/etc/localtime
+ln -sf "/usr/share/zoneinfo/$TIMEZONE" /mnt/etc/localtime
 check_fail $?
 
 announce "Enabling locales"
@@ -255,7 +266,7 @@ LC_NUMERIC="es_CO.UTF-8"
 LC_TIME="es_CO.UTF-8"
 LC_COLLATE="es_CO.UTF-8"
 LC_MONETARY="es_CO.UTF-8"
-LC_MESSAGES="es_CO.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
 LC_PAPER="es_CO.UTF-8"
 LC_NAME="es_CO.UTF-8"
 LC_ADDRESS="es_CO.UTF-8"
@@ -312,6 +323,14 @@ check_fail $?
 
 announce "Generating mkinitcpio"
 arch-chroot /mnt mkinitcpio -p linux
+check_fail $?
+
+announce "Generating Default User: $DEFAULT_USER"
+arch-chroot /mnt useradd -m $DEFAULT_USER_OPTIONS $DEFAULT_USER
+check_fail $?
+
+announce "Setting Default User password"
+echo "$DEFAULT_USER:$DEFAULT_USER_PASSWORD" | arch-chroot /mnt chpasswd
 check_fail $?
 
 announce "Everything went fine! restarting the system"

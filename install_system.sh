@@ -84,17 +84,17 @@ if [[ $UEFI_SYSTEM -eq $TRUE ]]; then
 
 	announce "Generating Boot partition"
 	BOOT_PARTITION="${DISK}2"
-	sgdisk -n 2:+1:$BOOT_PARTITION_SIZE -c 2:Boot -t 1:8300 "$DISK"
+	sgdisk -n 2:+1:$BOOT_PARTITION_SIZE -c 2:Boot -t 2:8300 "$DISK"
 	check_fail $?
 
 	announce "Generating System partition"
 	SYSTEM_PV="${DISK}3"
-	sgdisk -n 3:+1:$SYSTEM_PARTITION_SIZE -c 2:System -t 2:8E00 "$DISK"
+	sgdisk -n 3:+1:$SYSTEM_PARTITION_SIZE -c 3:System -t 3:8E00 "$DISK"
 	check_fail $?
 
 	announce "Generating Home partition"
 	HOME_PV="${DISK}4"
-	sgdisk -n 4:+1: -c 4:Home -t 3:8E00 "$DISK"
+	sgdisk -n 4:+1: -c 4:Home -t 4:8E00 "$DISK"
 	check_fail $?
 else
 	announce "Installing BIOS file system"
